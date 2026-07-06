@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NBA 篮球经理</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <div class="site-shell">
+        <header class="header">
+            <div class="brand">NBA 篮球经理</div>
+            <nav class="nav-bar">
+                <button class="nav-button active" data-section="home">首页</button>
+                <button class="nav-button" data-section="shop">商城</button>
+                <button class="nav-button" data-section="library">球员库</button>
+                <button class="nav-button" data-section="strategy">阵容战术</button>
+                <button class="nav-button" data-section="details">球员详情</button>
+            </nav>
+            <div class="user-panel">
+                <div id="userInfo" class="user-info">未登录</div>
+                <button id="loginBtn" class="action-button">登录 / 注册</button>
+                <button id="logoutBtn" class="action-button hidden">退出</button>
+            </div>
+        </header>
+
+        <main class="content">
+            <section id="home" class="page-section active">
+                <div class="hero-card">
+                    <h1>打造你的 NBA 球队</h1>
+                    <p>注册账号即可开始运营球队。金币可购买球员，钻石可升级属性。</p>
+                    <div class="stats-panel">
+                        <div>
+                            <strong>默认账号</strong>
+                            <p>用户名：<span class="strong-text">nba_king</span></p>
+                            <p>密码：<span class="strong-text">Hoops2026</span></p>
+                        </div>
+                        <div>
+                            <strong>特色功能</strong>
+                            <ul>
+                                <li>商城购买球员</li>
+                                <li>球员属性升级</li>
+                                <li>阵容与战术配置</li>
+                                <li>球员详情页、我的球员库</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-grid">
+                    <div class="mini-card">
+                        <h2>金币</h2>
+                        <p id="goldValue">0</p>
+                    </div>
+                    <div class="mini-card">
+                        <h2>钻石</h2>
+                        <p id="diamondValue">0</p>
+                    </div>
+                    <div class="mini-card">
+                        <h2>当前球员数</h2>
+                        <p id="playerCount">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="shop" class="page-section">
+                <div class="section-header">
+                    <h2>商城</h2>
+                    <p>使用金币购买球员，开始组建你的首发阵容。</p>
+                </div>
+                <div id="shopList" class="card-grid shop-grid"></div>
+            </section>
+
+            <section id="library" class="page-section">
+                <div class="section-header">
+                    <h2>我的球员库</h2>
+                    <p>查看已拥有的球员，使用钻石升级他们的属性。</p>
+                </div>
+                <div id="playerLibrary" class="card-grid shop-grid"></div>
+            </section>
+
+            <section id="strategy" class="page-section">
+                <div class="section-header">
+                    <h2>阵容战术</h2>
+                    <p>选择首发球员并设定战术风格，提升比赛表现。</p>
+                </div>
+                <div class="strategy-panel">
+                    <div class="strategy-box">
+                        <h3>首发阵容</h3>
+                        <div id="lineupSlots" class="lineup-grid"></div>
+                    </div>
+                    <div class="strategy-box">
+                        <h3>战术选择</h3>
+                        <div class="tactic-buttons">
+                            <button class="tactic" data-tactic="平衡进攻">平衡进攻</button>
+                            <button class="tactic" data-tactic="快速突破">快速突破</button>
+                            <button class="tactic" data-tactic="防守反击">防守反击</button>
+                            <button class="tactic" data-tactic="外线投射">外线投射</button>
+                        </div>
+                        <div class="selected-tactic">
+                            当前战术：<span id="currentTactic">无</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="details" class="page-section">
+                <div class="section-header">
+                    <h2>球员详情</h2>
+                    <p>从商城或球员库中点击“查看详情”来查看每位球员的完整属性。</p>
+                </div>
+                <div id="detailCard" class="detail-card hidden"></div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>© 2026 NBA 篮球经理，静态演示站点</p>
+        </footer>
+    </div>
+
+    <div id="authOverlay" class="overlay hidden">
+        <div class="auth-modal">
+            <div class="auth-tabs">
+                <button id="tabLogin" class="tab active">登录</button>
+                <button id="tabRegister" class="tab">注册</button>
+            </div>
+            <form id="loginForm" class="auth-form active">
+                <label>用户名</label>
+                <input type="text" id="loginUsername" placeholder="输入用户名" />
+                <label>密码</label>
+                <input type="password" id="loginPassword" placeholder="输入密码" />
+                <button type="submit" class="primary-button">登录</button>
+            </form>
+            <form id="registerForm" class="auth-form">
+                <label>用户名</label>
+                <input type="text" id="registerUsername" placeholder="创建用户名" />
+                <label>密码</label>
+                <input type="password" id="registerPassword" placeholder="创建密码" />
+                <label>确认密码</label>
+                <input type="password" id="registerConfirm" placeholder="再次输入密码" />
+                <button type="submit" class="primary-button">注册</button>
+            </form>
+            <button id="closeAuth" class="close-button" aria-label="关闭">✕</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,397 @@
+:root {
+    --bg: #0a1128;
+    --card: #111a3c;
+    --panel: #15274a;
+    --accent: #f59e0b;
+    --accent-strong: #eab308;
+    --text: #eef2ff;
+    --muted: #a8b4d1;
+    --border: rgba(255, 255, 255, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: radial-gradient(circle at top, #162447 0%, #0a1128 55%);
+    color: var(--text);
+}
+
+button,
+input {
+    font: inherit;
+}
+
+.site-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    gap: 16px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(9, 15, 35, 0.96);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.brand {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.nav-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.nav-button {
+    border: 1px solid transparent;
+    padding: 10px 16px;
+    background: transparent;
+    color: var(--text);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-button:hover,
+.nav-button.active {
+    background: rgba(245, 158, 11, 0.16);
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+.user-panel {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.user-info {
+    font-size: 0.95rem;
+    color: var(--muted);
+}
+
+.action-button,
+.primary-button,
+.tactic,
+.lineup-slot button,
+.player-action {
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.action-button,
+.primary-button,
+.tactic,
+.player-action {
+    background: linear-gradient(135deg, #f59e0b, #eab308);
+    color: #0f172a;
+    padding: 10px 16px;
+    font-weight: 700;
+}
+
+.action-button:hover,
+.primary-button:hover,
+.tactic:hover,
+.lineup-slot button:hover,
+.player-action:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(234, 179, 8, 0.2);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.content {
+    flex: 1;
+    padding: 24px;
+    width: min(1260px, 100%);
+    margin: 0 auto;
+}
+
+.page-section {
+    display: none;
+}
+
+.page-section.active {
+    display: block;
+}
+
+.hero-card,
+.card-grid,
+.section-header,
+.strategy-box,
+.detail-card,
+.auth-modal {
+    background: rgba(10, 17, 40, 0.92);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+}
+
+.hero-card {
+    padding: 32px;
+    margin-bottom: 24px;
+}
+
+.hero-card h1 {
+    margin: 0 0 12px;
+    font-size: clamp(2rem, 3.2vw, 3rem);
+}
+
+.hero-card p {
+    margin: 0 0 24px;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.stats-panel {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.stats-panel strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text);
+}
+
+.strong-text {
+    color: #f8fafc;
+}
+
+.card-grid {
+    display: grid;
+    gap: 18px;
+}
+
+.mini-card {
+    padding: 22px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, rgba(17, 21, 51, 0.9), rgba(24, 34, 70, 0.9));
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.mini-card h2 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    color: var(--accent);
+}
+
+.mini-card p {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.section-header {
+    padding: 24px;
+    margin-bottom: 18px;
+}
+
+.section-header h2 {
+    margin: 0 0 10px;
+}
+
+.section-header p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.shop-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.player-card {
+    padding: 20px;
+    display: grid;
+    gap: 14px;
+}
+
+.player-card h3 {
+    margin: 0;
+}
+
+.player-card p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.player-card small {
+    color: #f59e0b;
+}
+
+.player-card .player-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.player-card .player-actions button {
+    padding: 10px 14px;
+    font-weight: 700;
+}
+
+.strategy-panel {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1.5fr 1fr;
+}
+
+.lineup-grid {
+    display: grid;
+    gap: 12px;
+}
+
+.lineup-slot {
+    padding: 18px;
+    border-radius: 18px;
+    background: rgba(18, 32, 70, 0.9);
+    border: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lineup-slot span {
+    color: var(--muted);
+}
+
+.tactic-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.selected-tactic {
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.detail-card {
+    padding: 24px;
+}
+
+.detail-card h3 {
+    margin-top: 0;
+}
+
+.detail-list {
+    display: grid;
+    gap: 12px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: rgba(14, 24, 60, 0.9);
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 10, 30, 0.7);
+    display: grid;
+    place-items: center;
+    z-index: 20;
+}
+
+.auth-modal {
+    width: min(520px, 95vw);
+    padding: 24px;
+    position: relative;
+}
+
+.auth-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    flex: 1;
+    padding: 14px 0;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text);
+    border-radius: 999px;
+}
+
+.tab.active {
+    background: rgba(245, 158, 11, 0.18);
+}
+
+.auth-form {
+    display: none;
+    gap: 14px;
+    display: grid;
+}
+
+.auth-form.active {
+    display: grid;
+}
+
+.auth-form label {
+    font-size: 0.95rem;
+    color: var(--muted);
+}
+
+.auth-form input {
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+}
+
+.close-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    color: var(--text);
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
+}
+
+footer.footer {
+    padding: 18px 24px;
+    background: rgba(9, 15, 35, 0.96);
+    text-align: center;
+    color: var(--muted);
+}
+
+@media (max-width: 900px) {
+    .strategy-panel {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .nav-bar {
+        justify-content: center;
+    }
+}

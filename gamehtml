@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NBA篮球游戏</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; color: #fff; }
+    .login-page, .register-page { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    .login-box, .register-box { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 40px; width: 100%; max-width: 400px; border: 1px solid rgba(255,255,255,0.2); }
+    .login-box h2, .register-box h2 { text-align: center; margin-bottom: 30px; color: #ff6b6b; font-size: 28px; }
+    .login-box input, .register-box input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; background: rgba(255,255,255,0.9); color: #333; }
+    .login-box button, .register-box button { width: 100%; padding: 12px; margin: 15px 0; background: #ff6b6b; border: none; border-radius: 4px; color: #fff; font-size: 18px; cursor: pointer; transition: all 0.3s; }
+    .login-box button:hover, .register-box button:hover { background: #ee5a5a; }
+    .login-box p, .register-box p { text-align: center; margin-top: 15px; color: #aaa; }
+    .login-box a, .register-box a { color: #ff6b6b; text-decoration: none; }
+    .nav-bar { background: rgba(0,0,0,0.5); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+    .nav-bar h1 { color: #ff6b6b; font-size: 24px; }
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links a { color: #fff; text-decoration: none; padding: 8px 15px; border-radius: 5px; transition: all 0.3s; }
+    .nav-links a:hover, .nav-links a.active { background: rgba(255,107,107,0.3); color: #ff6b6b; }
+    .resources { display: flex; gap: 20px; align-items: center; }
+    .gold { color: #ffd700; font-weight: bold; }
+    .diamond { color: #00d4ff; font-weight: bold; }
+    .main-content { margin-top: 70px; padding: 30px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+    .page { display: none; animation: fadeIn 0.3s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .section-title { font-size: 24px; color: #ff6b6b; margin-bottom: 25px; padding-bottom: 10px; border-bottom: 2px solid rgba(255,107,107,0.3); }
+    .player-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+    .player-card { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; text-align: center; transition: all 0.3s; cursor: pointer; }
+    .player-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.15); }
+    .player-image { width: 120px; height: 120px; margin: 0 auto 10px; border-radius: 50%; overflow: hidden; background: rgba(255,255,255,0.1); }
+    .player-image svg { width: 100%; height: 100%; }
+    .player-name { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+    .player-pos { font-size: 12px; color: #aaa; margin-bottom: 10px; }
+    .player-price { color: #ffd700; font-weight: bold; margin-bottom: 10px; }
+    .buy-btn { background: #ff6b6b; border: none; padding: 8px 20px; border-radius: 5px; color: #fff; cursor: pointer; transition: all 0.3s; }
+    .buy-btn:hover { background: #ee5a5a; }
+    .buy-btn:disabled { background: #666; cursor: not-allowed; }
+    .upgrade-btn { background: #00d4ff; border: none; padding: 8px 20px; border-radius: 5px; color: #fff; cursor: pointer; transition: all 0.3s; }
+    .upgrade-btn:hover { background: #00a8cc; }
+    .upgrade-btn:disabled { background: #666; cursor: not-allowed; }
+    .player-stats { text-align: left; font-size: 12px; color: #ccc; margin-top: 10px; }
+    .player-stats p { margin: 3px 0; }
+    .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 200; justify-content: center; align-items: center; }
+    .modal.active { display: flex; }
+    .modal-content { background: #2a2a4a; border-radius: 15px; padding: 30px; width: 100%; max-width: 500px; border: 1px solid rgba(255,255,255,0.2); }
+    .modal-content h3 { color: #ff6b6b; margin-bottom: 20px; }
+    .modal-content .player-image { width: 150px; height: 150px; margin: 0 auto 20px; }
+    .modal-content .close-btn { background: #666; border: none; padding: 8px 20px; border-radius: 5px; color: #fff; cursor: pointer; margin-top: 20px; }
+    .lineup-container { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 30px; }
+    .lineup-court { background: linear-gradient(180deg, #1a4d3e 0%, #0d3329 100%); border-radius: 10px; padding: 40px; position: relative; }
+    .court-lines { position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border: 2px solid rgba(255,255,255,0.3); border-radius: 8px; }
+    .free-throw-circle { width: 80px; height: 80px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .lineup-positions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-top: 30px; }
+    .position-slot { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; text-align: center; border: 2px dashed rgba(255,255,255,0.2); }
+    .position-slot.filled { border: 2px solid #ff6b6b; background: rgba(255,107,107,0.1); }
+    .position-slot .pos-label { font-size: 14px; color: #aaa; margin-bottom: 10px; }
+    .position-slot .player-name { font-size: 12px; }
+    .tactics-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .tactic-card { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s; }
+    .tactic-card:hover, .tactic-card.active { transform: translateY(-5px); background: rgba(255,107,107,0.2); border: 1px solid #ff6b6b; }
+    .tactic-card h4 { margin-bottom: 10px; }
+    .tactic-card p { font-size: 12px; color: #aaa; }
+    .available-players { margin-top: 30px; }
+    .available-players h4 { color: #ff6b6b; margin-bottom: 15px; }
+    .available-players-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .available-player-item { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; font-size: 12px; }
+    .available-player-item:hover { background: rgba(255,107,107,0.2); }
+    .footer { text-align: center; padding: 30px; color: #666; margin-top: 50px; }
+    .alert { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: #fff; padding: 15px 30px; border-radius: 5px; z-index: 300; display: none; }
+    .alert.show { display: block; animation: slideDown 0.3s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+  </style>
+</head>
+<body>
+  <div class="login-page" id="loginPage">
+    <div class="login-box">
+      <h2>🏀 NBA篮球游戏</h2>
+      <input type="text" id="loginUsername" placeholder="用户名">
+      <input type="password" id="loginPassword" placeholder="密码">
+      <button onclick="login()">登录</button>
+      <p>还没有账号？<a href="#" onclick="showRegister()">立即注册</a></p>
+    </div>
+  </div>
+  <div class="register-page" id="registerPage" style="display: none;">
+    <div class="register-box">
+      <h2>🏀 注册账号</h2>
+      <input type="text" id="regUsername" placeholder="用户名">
+      <input type="password" id="regPassword" placeholder="密码">
+      <input type="password" id="regConfirm" placeholder="确认密码">
+      <button onclick="register()">注册</button>
+      <p>已有账号？<a href="#" onclick="showLogin()">立即登录</a></p>
+    </div>
+  </div>
+  <div class="main-app" id="mainApp" style="display: none;">
+    <div class="nav-bar">
+      <h1>🏀 NBA篮球游戏</h1>
+      <div class="nav-links">
+        <a href="#" onclick="showPage('home')" class="active">首页</a>
+        <a href="#" onclick="showPage('shop')">商城</a>
+        <a href="#" onclick="showPage('players')">球员库</a>
+        <a href="#" onclick="showPage('lineup')">阵容战术</a>
+      </div>
+      <div class="resources">
+        <span class="gold">💰 <span id="goldCount">5000</span></span>
+        <span class="diamond">💎 <span id="diamondCount">500</span></span>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="page active" id="home">
+        <h2 class="section-title">🏠 首页</h2>
+        <p>欢迎来到NBA篮球游戏！购买球员，组建你的冠军球队！</p>
+        <div class="player-grid" id="homePlayers"></div>
+      </div>
+      <div class="page" id="shop">
+        <h2 class="section-title">🛒 商城</h2>
+        <p>使用金币购买球员，打造你的梦幻球队！</p>
+        <div class="player-grid" id="shopPlayers"></div>
+      </div>
+      <div class="page" id="players">
+        <h2 class="section-title">📋 球员库</h2>
+        <p>查看你的球员，使用钻石升级属性！</p>
+        <div class="player-grid" id="myPlayers"></div>
+      </div>
+      <div class="page" id="lineup">
+        <h2 class="section-title">⚡ 阵容战术</h2>
+        <div class="lineup-container">
+          <h3 style="color: #ff6b6b; margin-bottom: 20px;">🏀 我的阵容</h3>
+          <div class="lineup-court">
+            <div class="court-lines"></div>
+            <div class="free-throw-circle"></div>
+          </div>
+          <div class="lineup-positions" id="lineupPositions"></div>
+        </div>
+        <div style="margin-top: 30px;">
+          <h3 style="color: #ff6b6b; margin-bottom: 20px;">🎯 战术设置</h3>
+          <div class="tactics-container">
+            <div class="tactic-card active" onclick="setTactic('offense')">
+              <h4>⚡ 进攻战术</h4>
+              <p>进攻+20%，防守-10%</p>
+            </div>
+            <div class="tactic-card" onclick="setTactic('balance')">
+              <h4>⚖️ 平衡战术</h4>
+              <p>攻守兼备，均衡发展</p>
+            </div>
+            <div class="tactic-card" onclick="setTactic('defense')">
+              <h4>🛡️ 防守战术</h4>
+              <p>进攻-10%，防守+20%</p>
+            </div>
+          </div>
+        </div>
+        <div class="available-players">
+          <h4>📥 可用球员</h4>
+          <div class="available-players-list" id="availablePlayers"></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <p>© 2026 NBA篮球游戏 - 打造你的冠军球队</p>
+    </div>
+  </div>
+  <div class="modal" id="playerModal">
+    <div class="modal-content">
+      <h3 id="modalTitle">球员详情</h3>
+      <div class="player-image" id="modalImage"></div>
+      <div id="modalInfo"></div>
+      <button class="close-btn" onclick="closeModal()">关闭</button>
+    </div>
+  </div>
+  <div class="alert" id="alertMsg"></div>
+  <script>
+    const positionColors = {
+      'PG': '#ff6b6b',
+      'SG': '#ffd700',
+      'SF': '#00d4ff',
+      'PF': '#4ade80',
+      'C': '#a855f7'
+    };
+    const positionNames = {
+      'PG': '控球后卫',
+      'SG': '得分后卫',
+      'SF': '小前锋',
+      'PF': '大前锋',
+      'C': '中锋'
+    };
+    const allPlayers = [
+      { id: 1, name: '库里', pos: 'PG', rating: 97, shooting: 98, passing: 92, defense: 78, dribble: 96, price: 3000, owned: true },
+      { id: 2, name: '东契奇', pos: 'PG', rating: 96, shooting: 90, passing: 95, defense: 75, dribble: 97, price: 2800, owned: true },
+      { id: 3, name: '哈登', pos: 'SG', rating: 95, shooting: 92, passing: 94, defense: 70, dribble: 95, price: 2600, owned: true },
+      { id: 4, name: '杜兰特', pos: 'SF', rating: 97, shooting: 96, passing: 85, defense: 80, dribble: 90, price: 3200, owned: true },
+      { id: 5, name: '詹姆斯', pos: 'SF', rating: 96, shooting: 88, passing: 92, defense: 85, dribble: 92, price: 3000, owned: true },
+      { id: 6, name: '字母哥', pos: 'PF', rating: 97, shooting: 75, passing: 82, defense: 92, dribble: 88, price: 3100, owned: true },
+      { id: 7, name: '浓眉', pos: 'C', rating: 95, shooting: 82, passing: 75, defense: 93, dribble: 78, price: 2800, owned: true },
+      { id: 8, name: '约基奇', pos: 'C', rating: 96, shooting: 85, passing: 90, defense: 82, dribble: 85, price: 2900, owned: true },
+      { id: 9, name: '伦纳德', pos: 'SF', rating: 94, shooting: 88, passing: 78, defense: 95, dribble: 85, price: 2500, owned: false },
+      { id: 10, name: '乔治', pos: 'SF', rating: 93, shooting: 90, passing: 80, defense: 88, dribble: 82, price: 2300, owned: false },
+      { id: 11, name: '利拉德', pos: 'PG', rating: 93, shooting: 94, passing: 85, defense: 70, dribble: 90, price: 2400, owned: false },
+      { id: 12, name: '欧文', pos: 'PG', rating: 92, shooting: 88, passing: 88, defense: 68, dribble: 98, price: 2200, owned: false },
+      { id: 13, name: '巴特勒', pos: 'SG', rating: 92, shooting: 80, passing: 82, defense: 90, dribble: 85, price: 2000, owned: false },
+      { id: 14, name: '塔图姆', pos: 'SF', rating: 93, shooting: 88, passing: 80, defense: 85, dribble: 88, price: 2400, owned: false },
+      { id: 15, name: '布克', pos: 'SG', rating: 92, shooting: 92, passing: 80, defense: 72, dribble: 85, price: 2100, owned: false },
+      { id: 16, name: '恩比德', pos: 'C', rating: 95, shooting: 85, passing: 72, defense: 90, dribble: 75, price: 2800, owned: false },
+      { id: 17, name: '唐斯', pos: 'C', rating: 91, shooting: 88, passing: 75, defense: 80, dribble: 78, price: 2000, owned: false },
+      { id: 18, name: '格林', pos: 'PF', rating: 88, shooting: 70, passing: 85, defense: 92, dribble: 80, price: 1500, owned: false },
+      { id: 19, name: '汤普森', pos: 'SG', rating: 90, shooting: 96, passing: 75, defense: 80, dribble: 75, price: 1800, owned: false },
+      { id: 20, name: '威少', pos: 'PG', rating: 88, shooting: 70, passing: 90, defense: 80, dribble: 92, price: 1600, owned: false }
+    ];
+    let currentUser = null;
+    let users = [];
+    let myPlayers = [];
+    let gold = 5000;
+    let diamond = 500;
+    let lineup = {};
+    let currentTactic = 'balance';
+    let selectedPosition = null;
+    function loadData() {
+      users = JSON.parse(localStorage.getItem('nba_users')) || [];
+      if (users.length === 0) {
+        users.push({ username: 'admin', password: '123456', gold: 5000, diamond: 500, players: [1,2,3,4,5,6,7,8], lineup: {}, tactic: 'balance' });
+        localStorage.setItem('nba_users', JSON.stringify(users));
+      }
+    }
+    function showLogin() {
+      document.getElementById('registerPage').style.display = 'none';
+      document.getElementById('loginPage').style.display = 'flex';
+    }
+    function showRegister() {
+      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('registerPage').style.display = 'flex';
+    }
+    function login() {
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+      const user = users.find(u => u.username === username && u.password === password);
+      if (user) {
+        currentUser = user;
+        gold = user.gold;
+        diamond = user.diamond;
+        myPlayers = allPlayers.filter(p => user.players.includes(p.id));
+        lineup = user.lineup || {};
+        currentTactic = user.tactic || 'balance';
+        updateResources();
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        renderShop();
+        renderMyPlayers();
+        renderLineup();
+        renderHome();
+        showAlert('登录成功！');
+      } else {
+        showAlert('用户名或密码错误！');
+      }
+    }
+    function register() {
+      const username = document.getElementById('regUsername').value;
+      const password = document.getElementById('regPassword').value;
+      const confirm = document.getElementById('regConfirm').value;
+      if (!username || !password) {
+        showAlert('请填写用户名和密码！');
+        return;
+      }
+      if (password !== confirm) {
+        showAlert('两次密码不一致！');
+        return;
+      }
+      if (users.find(u => u.username === username)) {
+        showAlert('用户名已存在！');
+        return;
+      }
+      users.push({ username, password, gold: 5000, diamond: 500, players: [1,2,3,4,5,6,7,8], lineup: {}, tactic: 'balance' });
+      localStorage.setItem('nba_users', JSON.stringify(users));
+      showAlert('注册成功！请登录');
+      showLogin();
+    }
+    function updateResources() {
+      document.getElementById('goldCount').textContent = gold;
+      document.getElementById('diamondCount').textContent = diamond;
+      if (currentUser) {
+        currentUser.gold = gold;
+        currentUser.diamond = diamond;
+        currentUser.players = myPlayers.map(p => p.id);
+        currentUser.lineup = lineup;
+        currentUser.tactic = currentTactic;
+        localStorage.setItem('nba_users', JSON.stringify(users));
+      }
+    }
+    function showAlert(msg) {
+      const alert = document.getElementById('alertMsg');
+      alert.textContent = msg;
+      alert.classList.add('show');
+      setTimeout(() => alert.classList.remove('show'), 2000);
+    }
+    function createQPlayerCard(name, pos, color) {
+      const skinColors = ['#fdbf6f', '#ffdab9', '#cd853f', '#8b4513'];
+      const hairColors = ['#000000', '#8b4513', '#d2691e', '#a52a2a', '#4682b4'];
+      const skin = skinColors[Math.floor(Math.random() * skinColors.length)];
+      const hair = hairColors[Math.floor(Math.random() * hairColors.length)];
+      return `<svg viewBox="0 0 100 100">
+        <circle cx="50" cy="30" r="18" fill="${skin}"/>
+        <circle cx="44" cy="27" r="4" fill="#000"/>
+        <circle cx="56" cy="27" r="4" fill="#000"/>
+        <circle cx="45" cy="26" r="1.5" fill="#fff"/>
+        <circle cx="57" cy="26" r="1.5" fill="#fff"/>
+        <path d="M46 36 Q50 40 54 36" stroke="#000" stroke-width="2" fill="none"/>
+        <ellipse cx="50" cy="75" rx="25" ry="30" fill="${color}"/>
+        <text x="50" y="78" text-anchor="middle" fill="#fff" font-size="8" font-weight="bold">${name.substring(0, 2)}</text>
+        <text x="50" y="88" text-anchor="middle" fill="#fff" font-size="6">${pos}</text>
+        <ellipse cx="25" cy="65" rx="12" ry="8" fill="${skin}"/>
+        <ellipse cx="75" cy="65" rx="12" ry="8" fill="${skin}"/>
+        <ellipse cx="32" cy="92" rx="8" ry="6" fill="${skin}"/>
+        <ellipse cx="68" cy="92" rx="8" ry="6" fill="${skin}"/>
+        <ellipse cx="50" cy="98" rx="12" ry="4" fill="#8b4513"/>
+        <circle cx="85" cy="90" r="8" fill="#ffa500"/>
+        <circle cx="85" cy="90" r="5" fill="#fff"/>
+        <path d="M35 15 Q40 8 50 8 Q60 8 65 15" fill="${hair}"/>
+        <rect x="42" y="45" width="16" height="4" fill="#fff" rx="2"/>
+      </svg>`;
+    }
+    function renderShop() {
+      const container = document.getElementById('shopPlayers');
+      container.innerHTML = allPlayers.filter(p => !myPlayers.includes(p)).map(p => `
+        <div class="player-card">
+          <div class="player-image">${createQPlayerCard(p.name, p.pos, positionColors[p.pos])}</div>
+          <div class="player-name">${p.name}</div>
+          <div class="player-pos">${positionNames[p.pos]}</div>
+          <div class="player-price">💰 ${p.price}</div>
+          <button class="buy-btn" onclick="buyPlayer(${p.id})" ${gold < p.price ? 'disabled' : ''}>购买</button>
+          <div class="player-stats">
+            <p>评分: ${p.rating}</p>
+            <p>投篮: ${p.shooting}</p>
+            <p>传球: ${p.passing}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+    function buyPlayer(id) {
+      const player = allPlayers.find(p => p.id === id);
+      if (!player || gold < player.price || myPlayers.find(p => p.id === id)) return;
+      gold -= player.price;
+      myPlayers.push(player);
+      updateResources();
+      renderShop();
+      renderMyPlayers();
+      renderLineup();
+      showAlert(`成功购买 ${player.name}！`);
+    }
+    function renderMyPlayers() {
+      const container = document.getElementById('myPlayers');
+      container.innerHTML = myPlayers.map(p => `
+        <div class="player-card" onclick="showPlayerDetail(${p.id})">
+          <div class="player-image">${createQPlayerCard(p.name, p.pos, positionColors[p.pos])}</div>
+          <div class="player-name">${p.name}</div>
+          <div class="player-pos">${positionNames[p.pos]}</div>
+          <div class="player-price">💎 升级消耗: ${p.rating * 10}</div>
+          <button class="upgrade-btn" onclick="event.stopPropagation(); upgradePlayer(${p.id})" ${diamond < p.rating * 10 ? 'disabled' : ''}>升级</button>
+          <div class="player-stats">
+            <p>评分: ${p.rating}</p>
+            <p>投篮: ${p.shooting}</p>
+            <p>传球: ${p.passing}</p>
+            <p>防守: ${p.defense}</p>
+            <p>运球: ${p.dribble}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+    function upgradePlayer(id) {
+      const player = myPlayers.find(p => p.id === id);
+      if (!player || diamond < player.rating * 10) return;
+      diamond -= player.rating * 10;
+      player.rating += 1;
+      player.shooting = Math.min(99, player.shooting + 2);
+      player.passing = Math.min(99, player.passing + 2);
+      player.defense = Math.min(99, player.defense + 2);
+      player.dribble = Math.min(99, player.dribble + 2);
+      updateResources();
+      renderMyPlayers();
+      renderLineup();
+      showAlert(`${player.name} 升级成功！评分: ${player.rating}`);
+    }
+    function showPlayerDetail(id) {
+      const player = myPlayers.find(p => p.id === id);
+      if (!player) return;
+      document.getElementById('modalTitle').textContent = player.name;
+      document.getElementById('modalImage').innerHTML = createQPlayerCard(player.name, player.pos, positionColors[p.pos]);
+      document.getElementById('modalInfo').innerHTML = `
+        <p>位置: ${positionNames[player.pos]}</p>
+        <p>评分: ${player.rating}</p>
+        <p>投篮: ${player.shooting}</p>
+        <p>传球: ${player.passing}</p>
+        <p>防守: ${player.defense}</p>
+        <p>运球: ${player.dribble}</p>
+      `;
+      document.getElementById('playerModal').classList.add('active');
+    }
+    function closeModal() {
+      document.getElementById('playerModal').classList.remove('active');
+    }
+    function showPage(pageId) {
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+    }
+    function renderLineup() {
+      const positions = ['PG', 'SG', 'SF', 'PF', 'C'];
+      const container = document.getElementById('lineupPositions');
+      container.innerHTML = positions.map(pos => {
+        const player = lineup[pos] ? myPlayers.find(p => p.id === lineup[pos]) : null;
+        return `
+          <div class="position-slot ${player ? 'filled' : ''}" onclick="selectPosition('${pos}')">
+            <div class="pos-label">${pos}</div>
+            ${player ? `
+              <div class="player-image" style="width: 60px; height: 60px; margin: 10px auto;">${createQPlayerCard(player.name, player.pos, positionColors[player.pos])}</div>
+              <div class="player-name">${player.name}</div>
+              <div style="font-size: 10px; color: #aaa;">评分: ${player.rating}</div>
+            ` : '<div style="color: #666; padding-top: 30px;">空位</div>'}
+          </div>
+        `;
+      }).join('');
+      renderAvailablePlayers();
+    }
+    function selectPosition(pos) {
+      selectedPosition = pos;
+      renderAvailablePlayers();
+      showAlert(`请选择一名${positionNames[pos]}放入此位置`);
+    }
+    function renderAvailablePlayers() {
+      const container = document.getElementById('availablePlayers');
+      const filteredPlayers = selectedPosition 
+        ? myPlayers.filter(p => p.pos === selectedPosition && !Object.values(lineup).includes(p.id))
+        : myPlayers.filter(p => !Object.values(lineup).includes(p.id));
+      container.innerHTML = filteredPlayers.map(p => `
+        <div class="available-player-item" onclick="addToLineup(${p.id})">
+          <div style="font-size: 10px; color: #aaa;">${p.pos}</div>
+          ${p.name}
+          <div style="font-size: 10px; color: #ffd700;">${p.rating}</div>
+        </div>
+      `).join('');
+      if (filteredPlayers.length === 0) {
+        container.innerHTML = '<div style="color: #666;">暂无可用球员</div>';
+      }
+    }
+    function addToLineup(id) {
+      if (!selectedPosition) {
+        showAlert('请先选择一个位置！');
+        return;
+      }
+      lineup[selectedPosition] = id;
+      selectedPosition = null;
+      updateResources();
+      renderLineup();
+      showAlert('球员已放入阵容！');
+    }
+    function setTactic(tactic) {
+      currentTactic = tactic;
+      document.querySelectorAll('.tactic-card').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      updateResources();
+      const tacticNames = { offense: '进攻战术', balance: '平衡战术', defense: '防守战术' };
+      showAlert(`已设置 ${tacticNames[tactic]}！`);
+    }
+    function renderHome() {
+      const container = document.getElementById('homePlayers');
+      container.innerHTML = myPlayers.slice(0, 6).map(p => `
+        <div class="player-card" onclick="showPlayerDetail(${p.id})">
+          <div class="player-image">${createQPlayerCard(p.name, p.pos, positionColors[p.pos])}</div>
+          <div class="player-name">${p.name}</div>
+          <div class="player-pos">${positionNames[p.pos]}</div>
+          <div style="color: #ffd700;">评分: ${p.rating}</div>
+        </div>
+      `).join('');
+    }
+    loadData();
+  </script>
+</body>
+</html>
