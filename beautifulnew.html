@@ -1,0 +1,161 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>美丽乡村新闻</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="beautifulnew.css">
+</head>
+<body class="site-shell">
+
+<header class="header news-header">
+    <div class="brand">美丽乡村新闻网</div>
+    <nav class="nav-bar">
+        <a href="index.html">首页</a>
+        <a href="beautiful.html">美丽乡村</a>
+        <a href="news.html">新闻</a>
+        <a href="minsu.html">乡村旅游</a>
+    </nav>
+    <button class="action-button">关注我们</button>
+</header>
+
+<main class="content">
+    <section class="page-plan">
+        <div class="plan-title">
+            <span>页面布局规划</span>
+            <p>根据图6-1设计，新闻页分为三个模块：头部导航区、选项卡新闻列表区和页脚区。</p>
+        </div>
+        <div class="layout-diagram">
+            <div class="layout-block header-block">头部导航区<br>宽度：100%</div>
+            <div class="layout-block tab-block">选项卡新闻列表区<br>宽度：1200px / 最小 400px</div>
+            <div class="layout-block footer-block">页脚区<br>宽度：1200px / 最小 400px</div>
+        </div>
+    </section>
+
+    <section class="news-panel">
+        <div class="panel-header">
+            <div>
+                <p class="eyebrow">美丽乡村要闻</p>
+                <h1>乡村振兴新闻速递</h1>
+                <p class="panel-description">汇聚乡村发展、乡村旅游、农产品品牌和民生服务新闻，支持选项卡切换展示。</p>
+            </div>
+            <div class="tabs" role="tablist">
+                <button class="tab-button active" data-tab="tab-recommend" type="button">推荐</button>
+                <button class="tab-button" data-tab="tab-rural" type="button">乡村新闻</button>
+                <button class="tab-button" data-tab="tab-tour" type="button">旅游动态</button>
+                <button class="tab-button" data-tab="tab-policy" type="button">政策法规</button>
+            </div>
+        </div>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab-recommend">
+                <article class="news-card">
+                    <h3>乡村振兴示范村迎来暑期游客高峰</h3>
+                    <div class="meta"><span>2026-07-06</span><span>来源：新华社</span></div>
+                    <p>“美丽乡村+旅游”模式持续升温，民宿、农耕体验和特色美食成为暑期热门打卡地。</p>
+                    <a href="#">阅读全文 →</a>
+                </article>
+                <article class="news-card">
+                    <h3>绿色农业产业园投产，农产品品牌迈向高质量</h3>
+                    <div class="meta"><span>2026-07-04</span><span>来源：农业农村部</span></div>
+                    <p>依托生态优势打造绿色农业产业链，推进乡村品牌化、标准化和数字化销售。</p>
+                    <a href="#">阅读全文 →</a>
+                </article>
+                <article class="news-card">
+                    <h3>数字乡村服务中心上线，基层治理更高效</h3>
+                    <div class="meta"><span>2026-07-02</span><span>来源：科技日报</span></div>
+                    <p>信息化平台实现社保、扶贫、文化活动一站式服务，提升基层公共服务体验。</p>
+                    <a href="#">阅读全文 →</a>
+                </article>
+            </div>
+
+            <div class="tab-pane" id="tab-rural">
+                <article class="news-card">
+                    <h3>美丽乡村改造项目完工，村庄焕然一新</h3>
+                    <div class="meta"><span>2026-06-28</span><span>来源：人民日报</span></div>
+                    <p>道路硬化、排水升级和文化墙建设提升乡村颜值，农户生活品质稳步提升。</p>
+                    <a href="#">阅读全文 →</a>
+                </article>
+                <article class="news-card">
+                    <h3>乡村文化活动丰富，红色基因传承更有力</h3>
+                    <div class="meta"><span>2026-06-22</span><span>来源：央视新闻</span></div>
+                    <p>系列文化节活动拉近城乡交流，推动传统手工艺与民俗文化传承发展。</p>
+                    <a href="#">阅读全文 →</a>
+                </article>
+                <article class="news-card">
+                    <h3>生态治理持续推进，河道清洁见成效</h3>
+                    <div class="meta"><span>2026-06-18</span><span>来源：省环保厅</span></div>
+                    <p>生态修复和垃圾分类同步实施，乡村生态面貌显著改善，居民幸福感提升。</p>
+                    <a href="#">阅读全文 →</a>
+                </article>
+            </div>
+
+            <div class="tab-pane" id="tab-tour">
+                <article class="news-card">
+                    <h3>乡村研学线路发布，亲子游报名火爆</h3>
+                    <div class="meta"><span>2026-06-15</span><span>来源：教育部官网</span></div>
+                    <p>丰富的农耕体验和生态课堂，让孩子们在自然乡野中了解农业与乡村文化。</p>
+                    <a href="#">阅读全文 →</a>
+                </article>
+                <article class="news-card">
+                    <h3>省级美丽乡村精品线路上线</h3>
+                    <div class="meta"><span>2026-06-12</span><span>来源：省文旅厅</span></div>
+                    <p>推荐生态采摘、古村落游览和民宿体验三条精品线路，促进农旅融合发展。</p>
+                    <a href="#">阅读全文 →</a>
+                </article>
+                <article class="news-card">
+                    <h3>乡村特色展销会吸引众多游客</h3>
+                    <div class="meta"><span>2026-06-08</span><span>来源：地方日报</span></div>
+                    <p>当地农特产品与手工艺品同台展示，助力农民增收、乡村旅游形象更靓丽。</p>
+                    <a href="#">阅读全文 →</a>
+                </article>
+            </div>
+
+            <div class="tab-pane" id="tab-policy">
+                <article class="news-card">
+                    <h3>新农保政策发布，乡村保障范围扩大</h3>
+                    <div class="meta"><span>2026-06-05</span><span>来源：人社部</span></div>
+                    <p>政策强调推进农村养老、医保和就业服务，强化基层社会保障体系建设。</p>
+                    <a href="#">阅读全文 →</a>
+                </article>
+                <article class="news-card">
+                    <h3>乡村振兴重点项目清单发布，落实加速</h3>
+                    <div class="meta"><span>2026-06-01</span><span>来源：国务院新闻办</span></div>
+                    <p>清单覆盖基础设施、产业发展、生态保护和公共服务四大板块，推动乡村稳步发展。</p>
+                    <a href="#">阅读全文 →</a>
+                </article>
+                <article class="news-card">
+                    <h3>农业品牌认证升级，特色农产品更具竞争力</h3>
+                    <div class="meta"><span>2026-05-28</span><span>来源：农业农村部</span></div>
+                    <p>加强品牌监管与质量追溯，促进乡村特色产业从规模化向价值化转型。</p>
+                    <a href="#">阅读全文 →</a>
+                </article>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer news-footer">
+    <div class="footer-inner">
+        <p>© 2026 美丽乡村新闻网</p>
+        <p>地址：乡村振兴示范区 · 绿色发展 · 美丽未来</p>
+    </div>
+</footer>
+
+<script>
+    const tabs = document.querySelectorAll('.tab-button');
+    const panes = document.querySelectorAll('.tab-pane');
+
+    tabs.forEach(button => {
+        button.addEventListener('click', () => {
+            tabs.forEach(item => item.classList.remove('active'));
+            panes.forEach(pane => pane.classList.remove('active'));
+            button.classList.add('active');
+            document.getElementById(button.dataset.tab).classList.add('active');
+        });
+    });
+</script>
+
+</body>
+</html>

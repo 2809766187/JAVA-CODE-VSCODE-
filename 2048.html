@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2048 游戏</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            --bg: #faf8ef;
+            --panel: #bbada0;
+            --text: #776e65;
+            --tile-2: #eee4da;
+            --tile-4: #ede0c8;
+            --tile-8: #f2b179;
+            --tile-16: #f59563;
+            --tile-32: #f67c5f;
+            --tile-64: #f65e3b;
+            --tile-128: #edcf72;
+            --tile-256: #edcc61;
+            --tile-512: #edc850;
+            --tile-1024: #edc53f;
+            --tile-2048: #edc22e;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #fffbe8 0%, var(--bg) 100%);
+            color: var(--text);
+        }
+
+        .game-wrap {
+            width: min(92vw, 470px);
+            padding: 24px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+            color: #776e65;
+        }
+
+        .score-box {
+            background: #bbada0;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 88px;
+        }
+
+        .score-box strong {
+            display: block;
+            font-size: 1.1rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 10px;
+        }
+
+        .controls p {
+            margin: 0;
+            line-height: 1.5;
+            color: #7c736a;
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font: inherit;
+            cursor: pointer;
+            background: #8f7a66;
+            color: #fff;
+            transition: transform 0.15s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            padding: 12px;
+            border-radius: 16px;
+            background: var(--panel);
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            background: rgba(238, 228, 218, 0.35);
+            display: grid;
+            place-items: center;
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #776e65;
+            transition: all 0.15s ease;
+        }
+
+        .cell[data-value="2"] { background: var(--tile-2); }
+        .cell[data-value="4"] { background: var(--tile-4); }
+        .cell[data-value="8"] { background: var(--tile-8); color: #f9f6f2; }
+        .cell[data-value="16"] { background: var(--tile-16); color: #f9f6f2; }
+        .cell[data-value="32"] { background: var(--tile-32); color: #f9f6f2; }
+        .cell[data-value="64"] { background: var(--tile-64); color: #f9f6f2; }
+        .cell[data-value="128"] { background: var(--tile-128); color: #f9f6f2; }
+        .cell[data-value="256"] { background: var(--tile-256); color: #f9f6f2; }
+        .cell[data-value="512"] { background: var(--tile-512); color: #f9f6f2; }
+        .cell[data-value="1024"] { background: var(--tile-1024); color: #f9f6f2; }
+        .cell[data-value="2048"] { background: var(--tile-2048); color: #f9f6f2; }
+
+        .status {
+            margin-top: 14px;
+            min-height: 24px;
+            color: #7c736a;
+            font-weight: 600;
+        }
+
+        @media (max-width: 480px) {
+            .game-wrap { padding: 18px; }
+            h1 { font-size: 1.6rem; }
+            .cell { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-wrap">
+        <div class="topbar">
+            <h1>2048</h1>
+            <div class="score-box">
+                <span>得分</span>
+                <strong id="score">0</strong>
+            </div>
+        </div>
+        <div class="controls">
+            <p>使用方向键或点击按钮移动方块。</p>
+            <button id="restartBtn">重新开始</button>
+        </div>
+        <div class="board" id="board" aria-label="2048棋盘"></div>
+        <div class="status" id="status">开始游戏，尽情合并吧！</div>
+    </div>
+
+    <script>
+        const size = 4;
+        const boardEl = document.getElementById('board');
+        const scoreEl = document.getElementById('score');
+        const statusEl = document.getElementById('status');
+        const restartBtn = document.getElementById('restartBtn');
+
+        let board = [];
+        let score = 0;
+
+        function createBoard() {
+            return Array.from({ length: size }, () => Array(size).fill(0));
+        }
+
+        function resetGame() {
+            board = createBoard();
+            score = 0;
+            scoreEl.textContent = score;
+            statusEl.textContent = '开始游戏，尽情合并吧！';
+            addRandomTile();
+            addRandomTile();
+            renderBoard();
+        }
+
+        function addRandomTile() {
+            const emptyCells = [];
+            board.forEach((row, rowIndex) => {
+                row.forEach((cell, colIndex) => {
+                    if (!cell) emptyCells.push([rowIndex, colIndex]);
+                });
+            });
+            if (!emptyCells.length) return;
+            const [row, col] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+            board[row][col] = Math.random() < 0.9 ? 2 : 4;
+        }
+
+        function renderBoard() {
+            boardEl.innerHTML = '';
+            for (let row = 0; row < size; row += 1) {
+                for (let col = 0; col < size; col += 1) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.value = board[row][col] || '';
+                    cell.textContent = board[row][col] || '';
+                    boardEl.appendChild(cell);
+                }
+            }
+        }
+
+        function slide(line) {
+            const filtered = line.filter((value) => value !== 0);
+            const result = [];
+            let gained = 0;
+
+            for (let i = 0; i < filtered.length; i += 1) {
+                if (filtered[i] === filtered[i + 1]) {
+                    const merged = filtered[i] * 2;
+                    result.push(merged);
+                    gained += merged;
+                    i += 1;
+                } else {
+                    result.push(filtered[i]);
+                }
+            }
+
+            while (result.length < size) result.push(0);
+            return { line: result, gained };
+        }
+
+        function move(direction) {
+            const oldBoard = board.map((row) => [...row]);
+            const moved = [];
+            let totalGained = 0;
+
+            if (direction === 'left' || direction === 'right') {
+                for (let row = 0; row < size; row += 1) {
+                    const line = direction === 'left' ? board[row] : [...board[row]].reverse();
+                    const { line: newLine, gained } = slide(line);
+                    moved.push(newLine);
+                    totalGained += gained;
+                }
+                if (direction === 'right') {
+                    board = moved.map((row) => row.slice().reverse());
+                } else {
+                    board = moved;
+                }
+            } else {
+                for (let col = 0; col < size; col += 1) {
+                    const line = [];
+                    for (let row = 0; row < size; row += 1) {
+                        line.push(board[row][col]);
+                    }
+                    const verticalLine = direction === 'up' ? line : line.reverse();
+                    const { line: newLine, gained } = slide(verticalLine);
+                    totalGained += gained;
+                    for (let row = 0; row < size; row += 1) {
+                        if (direction === 'up') {
+                            board[row][col] = newLine[row];
+                        } else {
+                            board[size - 1 - row][col] = newLine[row];
+                        }
+                    }
+                }
+            }
+
+            if (JSON.stringify(oldBoard) === JSON.stringify(board)) {
+                return false;
+            }
+
+            score += totalGained;
+            scoreEl.textContent = score;
+            addRandomTile();
+            renderBoard();
+            checkGameStatus();
+            return true;
+        }
+
+        function checkGameStatus() {
+            if (board.flat().includes(0)) {
+                statusEl.textContent = '继续加油！';
+                return;
+            }
+            let canMerge = false;
+            for (let row = 0; row < size; row += 1) {
+                for (let col = 0; col < size; col += 1) {
+                    const value = board[row][col];
+                    const right = board[row][col + 1];
+                    const down = board[row + 1]?.[col];
+                    if ((right && value === right) || (down && value === down)) {
+                        canMerge = true;
+                        break;
+                    }
+                }
+                if (canMerge) break;
+            }
+            statusEl.textContent = canMerge ? '继续加油！' : '游戏结束，重新开始吧！';
+        }
+
+        document.addEventListener('keydown', (event) => {
+            const moves = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down' };
+            const direction = moves[event.key];
+            if (!direction) return;
+            event.preventDefault();
+            move(direction);
+        });
+
+        restartBtn.addEventListener('click', resetGame);
+
+        resetGame();
+    </script>
+</body>
+</html>

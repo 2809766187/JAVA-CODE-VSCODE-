@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>企业视频宣传列表</title>
+	<meta name="description" content="企业视频宣传列表，照片墙展示，带分页工具条。">
+	<style>
+		/* 通用 */
+		:root{--primary:#c00;--muted:#666;--bg:#f7f9fb}
+		*{box-sizing:border-box}
+		body{font-family:Helvetica,Arial,'Microsoft Yahei',sans-serif;margin:0;background:var(--bg);color:#222}
+		a{color:inherit}
+
+		/* 页眉与导航 */
+		.header{background:#fff;border-bottom:1px solid #e6edf3}
+		.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px}
+		.brand{font-size:20px;font-weight:700}
+		.nav{display:flex;gap:6px}
+		.nav a{display:inline-block;padding:8px 12px;text-decoration:none;color:#000;font-weight:400;border-bottom:3px solid transparent;border-radius:4px}
+		.nav a.active{font-weight:700;border-bottom-color:#000}
+		.nav a:hover{background:var(--primary);color:#fff}
+
+		/* banner */
+		.banner-wrap{width:100%;overflow:hidden}
+		.banner{width:100%;min-width:1200px;height:260px;background-image:url('https://picsum.photos/seed/banner/1600/400');background-size:cover;background-position:center;display:flex;align-items:center;color:#fff}
+		.banner .inner{max-width:1200px;margin:0 auto;padding:24px}
+		.banner h2{margin:0;font-size:28px;text-shadow:0 2px 6px rgba(0,0,0,.35)}
+
+		/* 主体 */
+		.container{max-width:1200px;margin:20px auto;padding:0 16px}
+		.subnav{display:flex;gap:12px;margin:12px 0}
+		.subnav a{color:#000;text-decoration:none;padding:6px 4px}
+		.subnav a.active{font-weight:700;text-decoration:underline}
+		.subnav a:hover{font-weight:700}
+
+		/* 照片墙表格 */
+		table.video-table{width:100%;border-collapse:separate;border-spacing:18px}
+		table.video-table td{vertical-align:top;padding:0}
+		.card{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+		.thumb{display:block;width:100%;height:0;padding-bottom:56.25%;background-size:cover;background-position:center}
+		.card-body{padding:12px}
+		.title{font-size:16px;margin:0 0 6px;color:#0b66c3}
+		.meta{font-size:12px;color:var(--muted);margin-bottom:8px}
+		.summary{font-size:13px;color:#333;line-height:1.8;text-indent:2em}
+
+		/* 分页 */
+		.pagination{display:flex;gap:8px;justify-content:center;margin:22px 0}
+		.pager{background:#fff;border:1px solid #e1e6eb;padding:8px 12px;border-radius:6px;cursor:pointer}
+		.pager.active{background:#0b66c3;color:#fff;border-color:#0b66c3}
+
+		/* 页脚 */
+		.site-footer{background:#222;color:#fff;height:80px;display:flex;align-items:center;justify-content:center}
+
+		/* 响应式：在窄屏下改为单列 */
+		@media(max-width:900px){
+			.header-inner,.banner .inner,.container{padding:12px}
+			table.video-table{display:block}
+			table.video-table tr{display:flex;flex-direction:column;gap:18px}
+		}
+	</style>
+</head>
+<body>
+	<header class="header">
+		<div class="header-inner">
+			<div class="brand">公司名称</div>
+			<nav class="nav" aria-label="主导航">
+				<a href="#" class="active">首页</a>
+				<a href="#">服务</a>
+				<a href="#">案例</a>
+				<a href="#">关于我们</a>
+				<a href="#">联系</a>
+			</nav>
+		</div>
+	</header>
+
+	<div class="banner-wrap">
+		<div class="banner">
+			<div class="inner">
+				<h2>用影像讲述品牌力量 — 企业视频解决方案</h2>
+			</div>
+		</div>
+	</div>
+
+	<main class="container">
+		<div class="subnav" role="navigation" aria-label="二级导航">
+			<a href="#" class="active">全部</a>
+			<a href="#">形象片</a>
+			<a href="#">产品片</a>
+			<a href="#">客户见证</a>
+			<a href="#">招聘片</a>
+		</div>
+
+		<table class="video-table" role="grid">
+			<tbody>
+				<tr>
+					<td>
+						<article class="card">
+							<a class="thumb" href="#" style="background-image:url('https://picsum.photos/seed/v1/800/450')" aria-label="播放：品牌形象片"></a>
+							<div class="card-body">
+								<h3 class="title"><a href="#">品牌形象片</a></h3>
+								<div class="meta">2026-07-01 <span style="float:right">播放：12,345</span></div>
+								<p class="summary">凝练品牌核心价值，塑造专业企业形象，适用于官网与展会播放。</p>
+							</div>
+						</article>
+					</td>
+
+					<td>
+						<article class="card">
+							<a class="thumb" href="#" style="background-image:url('https://picsum.photos/seed/v2/800/450')" aria-label="播放：产品演示片"></a>
+							<div class="card-body">
+								<h3 class="title"><a href="#">产品演示片</a></h3>
+								<div class="meta">2026-06-20 <span style="float:right">播放：9,210</span></div>
+								<p class="summary">通过场景演示展示产品功能，帮助客户快速理解使用价值。</p>
+							</div>
+						</article>
+					</td>
+
+					<td>
+						<article class="card">
+							<a class="thumb" href="#" style="background-image:url('https://picsum.photos/seed/v3/800/450')" aria-label="播放：客户见证"></a>
+							<div class="card-body">
+								<h3 class="title"><a href="#">客户见证</a></h3>
+								<div class="meta">2026-05-11 <span style="float:right">播放：6,480</span></div>
+								<p class="summary">真实客户访谈与项目案例，增强潜在客户信任度与转化率。</p>
+							</div>
+						</article>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<article class="card">
+							<a class="thumb" href="#" style="background-image:url('https://picsum.photos/seed/v4/800/450')" aria-label="播放：招聘宣传片"></a>
+							<div class="card-body">
+								<h3 class="title"><a href="#">招聘宣传片</a></h3>
+								<div class="meta">2026-04-28 <span style="float:right">播放：3,210</span></div>
+								<p class="summary">展示企业文化与工作环境，帮助吸引目标人才加入团队。</p>
+							</div>
+						</article>
+					</td>
+
+					<td>
+						<article class="card">
+							<a class="thumb" href="#" style="background-image:url('https://picsum.photos/seed/v5/800/450')" aria-label="播放：活动回顾"></a>
+							<div class="card-body">
+								<h3 class="title"><a href="#">活动回顾</a></h3>
+								<div class="meta">2026-03-15 <span style="float:right">播放：2,987</span></div>
+								<p class="summary">大型活动现场剪辑，适合投放社媒与内网传播。</p>
+							</div>
+						</article>
+					</td>
+
+					<td>
+						<article class="card">
+							<a class="thumb" href="#" style="background-image:url('https://picsum.photos/seed/v6/800/450')" aria-label="播放：项目演示"></a>
+							<div class="card-body">
+								<h3 class="title"><a href="#">项目演示</a></h3>
+								<div class="meta">2026-01-30 <span style="float:right">播放：1,520</span></div>
+								<p class="summary">针对客户项目进行拍摄与案例拆解，提升投标与商务沟通效果。</p>
+							</div>
+						</article>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="pagination" role="navigation" aria-label="分页">
+			<button class="pager" id="prev">上一页</button>
+			<button class="pager active" data-page="1">1</button>
+			<button class="pager" data-page="2">2</button>
+			<button class="pager" data-page="3">3</button>
+			<button class="pager" id="next">下一页</button>
+		</div>
+	</main>
+
+	<footer class="site-footer">
+		<div>© 2026 公司名称 • 专业视频制作服务</div>
+	</footer>
+
+	<script>
+		// 简单分页高亮演示（页面未接后端）
+		document.querySelectorAll('.pagination .pager[data-page]').forEach(btn=>{
+			btn.addEventListener('click',()=>{
+				document.querySelectorAll('.pagination .pager').forEach(b=>b.classList.remove('active'));
+				btn.classList.add('active');
+			});
+		});
+		document.getElementById('prev').addEventListener('click',()=>{
+			let active = document.querySelector('.pagination .pager.active[data-page]');
+			if(!active) return; let p = Math.max(1,Number(active.dataset.page)-1);
+			document.querySelector('.pagination .pager[data-page="'+p+'"]').click();
+		});
+		document.getElementById('next').addEventListener('click',()=>{
+			let active = document.querySelector('.pagination .pager.active[data-page]');
+			if(!active) return; let p = Math.min(3,Number(active.dataset.page)+1);
+			document.querySelector('.pagination .pager[data-page="'+p+'"]').click();
+		});
+	</script>
+</body>
+</html>
+

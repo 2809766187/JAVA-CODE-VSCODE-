@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Beautiful Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* small override to keep banner content readable when min-width forces horizontal scroll */
+        .hero-card.banner { overflow: hidden; }
+    </style>
+</head>
+<body class="site-shell">
+
+<header class="header">
+    <div class="brand">示例站点</div>
+    <nav class="nav-bar">
+        <a href="#" class="active">首页</a>
+        <a href="#">作品</a>
+        <a href="#">关于</a>
+        <a href="#">联系</a>
+    </nav>
+    <div class="user-panel">
+        <button class="action-button">登录</button>
+    </div>
+</header>
+
+<main class="content">
+    <div class="hero-card banner">
+        <h1>欢迎来到示例横幅</h1>
+        <p>此横幅最小宽度为 1200px，宽度为 100% 以实现响应式变化。</p>
+    </div>
+
+    <div class="section-header">
+        <nav class="sub-nav">
+            <a href="#" class="active">二级导航一</a>
+            <a href="#">二级导航二</a>
+            <a href="#">二级导航三</a>
+        </nav>
+    </div>
+
+    <article class="detail-card">
+        <p>这是正文第一段示例。每段首行会缩进，两格宽度，并且使用指定的行高和颜色。</p>
+        <p>这是正文第二段示例。用于验证样式：首行缩进、行高、文字颜色等。</p>
+    </article>
+</main>
+
+<footer class="footer">
+    <p>© 2026 示例站点 — 底部居中显示</p>
+</footer>
+
+</body>
+</html>

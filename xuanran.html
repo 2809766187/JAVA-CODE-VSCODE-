@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>新闻动态</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            --bg: #f5f7fb;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --accent: #2563eb;
+            --border: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #eef4ff 0%, var(--bg) 100%);
+            color: var(--text);
+        }
+
+        .page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 20px 48px;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 8px;
+            font-size: 2rem;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .news-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 14px;
+        }
+
+        .news-item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px 20px;
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .news-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.1);
+        }
+
+        .news-link {
+            display: block;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .news-link:hover {
+            color: var(--accent);
+        }
+
+        .news-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            color: var(--muted);
+            font-size: 0.92rem;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .news-item:hover .news-meta {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .status {
+            padding: 18px 20px;
+            background: var(--card);
+            border: 1px dashed var(--border);
+            border-radius: 16px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <header class="page-header">
+            <h1>新闻动态</h1>
+            <p>从本地新闻数据文件中异步加载内容，并在悬停时显示来源和发布时间。</p>
+        </header>
+        <ul id="newsList" class="news-list"></ul>
+    </main>
+
+    <script>
+        const newsList = document.getElementById('newsList');
+
+        async function loadNews() {
+            try {
+                const response = await fetch('news.html');
+                if (!response.ok) {
+                    throw new Error('新闻数据加载失败');
+                }
+                const data = await response.text();
+                const news = JSON.parse(data);
+                renderNews(news);
+            } catch (error) {
+                newsList.innerHTML = `<li class="status">${error.message}</li>`;
+            }
+        }
+
+        function renderNews(news) {
+            newsList.innerHTML = '';
+            if (!Array.isArray(news) || news.length === 0) {
+                newsList.innerHTML = '<li class="status">当前没有可显示的新闻。</li>';
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            news.forEach((item) => {
+                const li = document.createElement('li');
+                li.className = 'news-item';
+
+                const link = document.createElement('a');
+                link.className = 'news-link';
+                link.href = item.link;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.textContent = item.title;
+                link.addEventListener('click', () => {
+                    window.open(item.link, '_blank', 'noopener,noreferrer');
+                });
+
+                const meta = document.createElement('div');
+                meta.className = 'news-meta';
+                meta.innerHTML = `<span>来源：${item.source}</span><span>发布时间：${item.date}</span>`;
+
+                li.appendChild(link);
+                li.appendChild(meta);
+                fragment.appendChild(li);
+            });
+
+            newsList.appendChild(fragment);
+        }
+
+        loadNews();
+    </script>
+</body>
+</html>
